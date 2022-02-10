@@ -1,52 +1,55 @@
-const sequelize = require('../config/sequelize');
-const { Sequelize, DataTypes } = require('sequelize');
-const post = require('./post-models');
-const comment = require('./comment-models');
-
-const user = sequelize.define('user', {
-
-    
-    nom: {
-        type: DataTypes.STRING,
-        allowNull: false
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  User.init({
+    id: { 
+      type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
     },
-    prenom: {
-        type: DataTypes.STRING,
-        allowNull: false
+
+    admin: {
+      type: DataTypes.STRING,
+      defaultValue: 'user'
+  },
+    username:{
+    type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            notNull: { msg: 'User must have a name' },
+            notEmpty: { msg: 'Name must not be empty' },
+        }
     },
     email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    image: {
-        type: DataTypes.STRING,
-    },
-    role: {
-        type: DataTypes.INTEGER,
-        defaultValue: 2
-    }    
-},
-{
-    timestamps: false
-})
-user.hasMany(post, {
-    foreignKey: 'user_id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-post.belongsTo(user, { foreignKey: 'user_id' });
-
-user.hasMany(comment, {
-    foreignKey: 'user_id',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-comment.belongsTo(user, { foreignKey: 'user_id' });
-
-
-module.exports = user;
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+          notNull: { msg: 'User must choose an email' },
+          notEmpty: { msg: 'Email must not be empty' },
+          isEmail: { msg: 'Email must be valid'}
+      }
+  },
+    password:{ 
+    type: DataTypes.STRING,
+    allowNull: false
+    }
+  }, {
+    sequelize,
+    tableName: 'users',
+    modelName: 'User',
+  });
+  return User;
+};
