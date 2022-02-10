@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "ocdev2021",
-    "database": "groupomania",
+    "database": "groupomania_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "ocdev2021",
-    "database": "groupomania",
+    "database": "groupomania_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "ocdev2021",
-    "database": "groupomania",
+    "database": "groupomania_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
