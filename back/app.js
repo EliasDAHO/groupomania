@@ -11,14 +11,15 @@ const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
 
-async function main(){
+const connect = async function () {
     try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+      await sequelize.authenticate();
+      console.log('La connexion a été établie avec succès à SQL.');
     } catch (error) {
-        console.error('Unable to connect to the database:', error);
+      console.error('Impossible de se connecter à la base de données SQL:', error);
     }
-}
+  };
+  connect();
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
