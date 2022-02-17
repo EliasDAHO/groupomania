@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const path = require('path');
-const { sequelize } = require('./models/index');
+const { sequelize } = require('./models');
 
 const app = express();
 
