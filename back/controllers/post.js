@@ -19,16 +19,16 @@ const post= new Post({
 };
 
 exports.modifyPost=(req, res, next)=>{
-    // verifier si l'utilisateur qui fait l'operation est l'utilisateur qui a crée le post
+
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token,process.env.TOKEN_SECRET);
-    // utilisateur du token 
+    
     const userId = decodedToken.userId;
  
   post.findOne({ _id:req.params.id})
     .then(post =>{
       if(post.userId == userId){
-          // proceder à la modification
+          
           const postObject = req.file ?
          { ...JSON.parse(req.body.post),
            imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -39,7 +39,7 @@ exports.modifyPost=(req, res, next)=>{
      
       }
       else {
-        // ne pas supprimer et retourner un status non autorisé 
+
         res.status(401).json({ message: 'Utilisateur non autorisé pour faire la modification !'});
       }
                   
@@ -48,7 +48,7 @@ exports.modifyPost=(req, res, next)=>{
  };
  
  exports.deletePost=( req,res, next) => {
-    // verifier si l'utilisateur qui fait l'opération est l'utilisateur qui a créé le post
+    
       const token = req.headers.authorization.split(' ')[1];
       const decodedToken = jwt.verify(token,process.env.TOKEN_SECRET);
       // utilisateur du token 
@@ -66,7 +66,7 @@ exports.modifyPost=(req, res, next)=>{
       });  
         }
         else {
-          // ne pas supprimer et retourner un status non autorisé
+          
           res.status(401).json({ message: 'Utilisateur non autorisé pour faire la suppression !'});
         }
                     
