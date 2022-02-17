@@ -1,60 +1,25 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const {  Model} = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-     static associate({ post, comment }) {
-      // define association here
-      this.hasMany(post, { foreignKey: 'userId', as: 'posts', onDelete: 'CASCADE', hooks: true })
-      this.hasMany(comment, { foreignKey: 'userId', as: 'comments', onDelete: 'CASCADE', hooks: true })
-    }
-    
-    toJSON(){
-        return { ...this.get(), id: undefined }
-    }
-  };
-  user.init({
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+
+  const User = sequelize.define('User', {
+    Id: DataTypes.INTEGER,
+    email: DataTypes.STRING,
+    username: DataTypes.STRING,
+    password:DataTypes.STRING,
+    role: DataTypes.STRING,
   },
-  admin: {
-      type: DataTypes.STRING,
-      defaultValue: 'user'
-  },
-  username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-          notNull: { msg: 'User must have a name' },
-          notEmpty: { msg: 'Name must not be empty' },
+  {
+    classMethods: {
+      associate(models) {
+        // associations can be defined here
+        models.User.hasMany(models.Comment);
+        models.User.hasMany(models.Comment);
+       // models.Post.hasMany(models.Like);
+       // models.Post.hasMany(models.Dislike);
       }
-  },
-  email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-          notNull: { msg: 'User must choose an email' },
-          notEmpty: { msg: 'Email must not be empty' },
-          isEmail: { msg: 'Email must be valid'}
-      }
-  },
-  password: {
-      type: DataTypes.STRING,
-      allowNull: false
-  }
-}, {
-    sequelize,
-    tableName: 'users',
-    modelName: 'user',
+    }
   });
-  return user;
+  return User;
 };

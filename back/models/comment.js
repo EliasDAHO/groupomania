@@ -1,39 +1,32 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const {  Model} = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class comment extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-     static associate({ user, post }) {
-      // define association here
-      this.belongsTo(user, { foreignKey: 'userId' })
-      this.belongsTo(post, { foreignKey: 'postId' })
-    }
-    toJSON(){
-        return { ...this.get(), id: undefined, userId: undefined, postId: undefined }
-    }
-  };
-  comment.init({
-    uuid:{ type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4 
-    }, 
-    content: { 
-      type:DataTypes.STRING,
-      allowNull: false,
-      validate: {
-          notNull: { msg: 'Comment cannot be null' },
-          notEmpty: { msg: 'Comment cannot be empty' },
+
+  const Comment = sequelize.define('Comment', {
+    content: DataTypes.STRING,
+    Id: DataTypes.INTEGER,
+    
+    postId: DataTypes.INTEGER
+  }, {
+    classMethods: {
+      associate(models) {
+        // associations can be defined here
+      	models.Comment.belongsTo(models.User, {
+          foreignKey: {
+            allowNull: false,
+          },
+          onDelete: 'CASCADE'
+        }),
+          models.Comment.belongsTo(models.Post, {
+            foreignKey: {
+              allowNull: false,   
+            },
+            onDelete: 'CASCADE'
+          });
+        
       }
     }
-  }, {
-    sequelize,
-    tableName: 'comments',
-    modelName: 'comment',
   });
-  return comment;
+  return Comment;
 };
