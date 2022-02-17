@@ -8,14 +8,21 @@ require('dotenv').config();
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const newUser =  { username: req.body.username, email: req.body.email, password: hash, role: req.body.role }
-            User.create(newUser)
-                .then((newUser) => res.json(newUser))
-                .catch(error => res.status(400).json({ error }));
+    .then(hash => {
+       
+        User.create({
+            email: req.body.email,
+            username: req.body.username,
+            password: hash,
+            role: req.body.role
         })
-        .catch(error => res.status(500).json({ error }));
-}
+         .then(() =>res.status(201).json({ message:'Utilisateur créé !'}))
+         .catch(error => { console.log(error); res.status(400).json({message : error.message});});
+      })
+    .catch(error => { console.log(error); res.status(500).json({message : error.message}); });
+    };
+    
+            
 
 exports.login = (req, res, next) => {
     User.findOne({ where: { username: req.body.username } })
