@@ -19,8 +19,7 @@ const {  Model} = require('sequelize');
           }),
           
           models.Post.hasMany(models.Comment);
-         // models.Post.hasMany(models.Like);
-         // models.Post.hasMany(models.Dislike);
+        
         }
       }
     });
