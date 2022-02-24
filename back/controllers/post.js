@@ -1,7 +1,8 @@
-const user = require('../models/user');
-const post = require('../models/post');
 const jwt = require ('jsonwebtoken');
 const fs = require('fs');
+const user = require('../models/user');
+const post = require('../models/post');
+
 
 exports.createPost=(req, res, next) =>{
   const postObject = JSON.parse(req.body.post);
@@ -45,6 +46,7 @@ exports.modifyPost=(req, res, next)=>{
   })
   .catch(error =>{ console .log(error); res.status(500).json({ error}); });
  };
+ 
  exports.deletePost=( req,res, next) => {
     
       const token = req.headers.authorization.split(' ')[1];
