@@ -1,41 +1,66 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
+import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
+import Allposts from '../views/Allposts.vue'
+
+import Createpost from '../views/Createpost.vue'
+import Modifypost from '../views/Modifypost.vue'
+import Post from '../views/Post.vue'
+import Adminposts from '../views/Adminposts.vue'
+
+
+Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup
+  },
+  {
+    path: '/login',
     name: 'Login',
     component: Login
   },
   {
-      path: '/signup',
-      name: 'Signup',
-      component: () => import(/* webpackChunkName: "signup" */ '../views/Signup.vue')
+    path: '/allposts',
+    name: 'Allposts',
+    component: Allposts
+  },
+  
+  {
+    path: '/post/',
+    name: 'Post',
+    component: Post
+  },
+ 
+  {
+    path: '/createPost',
+    name: 'CreatePost',
+    component: Createpost
   },
   {
-      path: '/home',
-      name: 'Home',
-      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    path: '/modifypost/:id',
+    name: 'ModifyPost',
+    component: Modifypost
   },
   {
-      path: '/comments/:postUuid',
-      name: 'Comments',
-      component: () => import(/* webpackChunkName: "comments" */ '../views/Comments.vue')
+    path: '/admin/posts',
+    name: 'AdminPosts',
+    component: Adminposts
   },
-  {
-      path: '/account',
-      name: 'Account',
-      component: () => import(/* webpackChunkName: "account" */ '../views/Account.vue')
-  },
-  {
-      path: '/userposts/:useruuid',
-      name: 'UserPosts',
-      component: () => import(/* webpackChunkName: "userposts" */ '../views/UserPosts.vue')
-  }
+  
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
