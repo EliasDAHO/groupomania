@@ -4,9 +4,9 @@ const router = express.Router();
 const commentCtrl = require('../controllers/comment');
 const auth = require('../middleware/auth');
 
-router.post('/create', auth,  commentCtrl.createComment);
-router.put('/modify',auth,  commentCtrl.modifyComment);
-router.delete('/delete',auth, commentCtrl.deleteComment);
-router.get('/allcomments',auth, commentCtrl.allComments);
+router.post('/', auth,  commentCtrl.createComment);
+router.put('/:id',auth,  commentCtrl.modifyComment);
+router.delete('/:id',auth, commentCtrl.deleteComment);
+router.get('/',auth, commentCtrl.allComments);
 
 module.exports = router;
