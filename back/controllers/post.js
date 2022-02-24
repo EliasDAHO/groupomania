@@ -1,25 +1,24 @@
-const jwt = require ('jsonwebtoken');
-const fs = require('fs');
 const user = require('../models/user');
 const post = require('../models/post');
-
+const jwt = require ('jsonwebtoken');
+const fs = require('fs');
 
 exports.createPost=(req, res, next) =>{
-    const postObject = JSON.parse(req.body.post);
-        
+  const postObject = JSON.parse(req.body.post);
+      
 const post= new Post({
-    ...postObject,
-    imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    
-  });
+  ...postObject,
+  imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+  
+});
 
-  post.save()
-  .then(() => res.status(201).json({ message: 'Post créé !'})) 
-  .catch(error =>{ console.log(error); res.status(400).json({ error});})        
+post.save()
+.then(() => res.status(201).json({ message: 'Post créé !'})) 
+.catch(error =>{ console.log(error); res.status(400).json({ error});})        
 };
 
 exports.modifyPost=(req, res, next)=>{
-
+    
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token,process.env.TOKEN_SECRET);
     
@@ -39,25 +38,24 @@ exports.modifyPost=(req, res, next)=>{
      
       }
       else {
-
+        
         res.status(401).json({ message: 'Utilisateur non autorisé pour faire la modification !'});
       }
                   
   })
   .catch(error =>{ console .log(error); res.status(500).json({ error}); });
  };
- 
  exports.deletePost=( req,res, next) => {
     
       const token = req.headers.authorization.split(' ')[1];
       const decodedToken = jwt.verify(token,process.env.TOKEN_SECRET);
-      // utilisateur du token 
+      
       const userId = decodedToken.userId;
   
    post.findOne({ _id:req.params.id})
       .then(post =>{
         if(post.userId == userId){
-            // procéder à la suppression
+            
             const filename = post.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`,() =>{
          post.deleteOne({ _id: req.params.id})

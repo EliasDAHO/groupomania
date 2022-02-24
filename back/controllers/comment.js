@@ -6,9 +6,9 @@ const comment = require('../models/comment');
 
 
 exports.createComment = (req, res, next) => {
-    user.findOne({ where: { uuid: req.body.userUuid }})
+    user.findOne({ where: { userId: req.body.userId }})
         .then((user) => {
-            post.findOne({ where: { uuid: req.params.postUuid }})
+            post.findOne({ where: { userId: req.params.postuserId }})
                 .then((post) => {
                     const newComment = { content: req.body.content, userId: user.id, postId: post.id };
                     comment.create(newComment)
@@ -21,9 +21,9 @@ exports.createComment = (req, res, next) => {
 }
 
 exports.modifyComment = (req, res, next) => {
-    comment.findOne({ where: { uuid: req.params.commentUuid }, include: user})
+    comment.findOne({ where: { userId: req.params.commentUserid }, include: user})
         .then((comment) => {
-            if(req.body.userUuid == comment.user.uuid || req.body.isAdmin == "admin"){
+            if(req.body.userId == comment.user.userId || req.body.isAdmin == "admin"){
                 comment.content = req.body.content
                 comment.save()
                     .then(() => res.status(200).json({ message: 'Message modifié !'}))
@@ -37,9 +37,9 @@ exports.modifyComment = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-    comment.findOne({ where: { uuid: req.params.commentUuid }, include: user})
+    comment.findOne({ where: { userId: req.params.commentUserId }, include: user})
         .then((comment) => {
-            if(req.body.userUuid == comment.user.uuid || req.body.isAdmin == 'admin'){
+            if(req.body.userId == comment.user.userId || req.body.isAdmin == 'admin'){
                 comment.destroy()
                     .then(() => res.status(200).json({ message: 'Message supprimé !'}))
                     .catch(error => res.status(400).json({ error }));
@@ -51,7 +51,7 @@ exports.deleteComment = (req, res, next) => {
 }
  
 exports.allComments = (req, res, next) => {
-    post.findOne({ where: { uuid: req.params.postUuid }, include: [{ all: true, nested: true}] })
+    post.findOne({ where: {userId: req.params.postuserId }, include: [{ all: true, nested: true}] })
         .then((post) => res.json(post))
         .catch(error => res.status(400).json({ error }));
 }

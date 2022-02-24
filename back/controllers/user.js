@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
+
 const models = require('../models');
 const User = models.User;
 require('dotenv').config();
@@ -36,10 +36,10 @@ exports.login = (req, res, next) => {
                     return res.status(401).json({ error: 'Mot de passe incorrect !' });
                 }
                 res.status(200).json({
-                    userId: user._id,
-          isAdmin: user.admin,
+                    userId: user.id,
+                    role: user.role,
           token:jwt.sign(
-            { userId: user._id, isAdmin: user.admin},
+            { userId: user.id, role: user.role},
             process.env.TOKEN_SECRET,
             { expiresIn:'24h'} 
           )
@@ -86,11 +86,11 @@ exports.delete = (req, res) => {
                 if (user != null) {        
         
         models.User
-            .destroy({ where: { id: user.id }})
-            .then(() => res.end())
-            .catch(err => console.log('error' ,err))
-                      
-            }
+        .destroy({ where: { id: user.id }})
+        .then(() => res.end())
+        .catch(err => console.log('error' ,err))
+                  
+        }
                 else {
                     res.status(401).json({ error: 'Cet utilisateur n\'existe pas' })
                 }
@@ -101,8 +101,25 @@ exports.delete = (req, res) => {
 }
 
 exports.userAccount = (req , res , next) => {
-    User.findOne({ where: { _id:req.body.userId}})
-    .then((user)=> res.json(user))
-    .catch(error =>res.status(400).json({ error}))
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token,process.env.TOKEN_SECRET);
+    const userId = decodedToken.userId;
+    const role = decodedToken.role;
+console.log("id",req.params.id);
+if(req.params.id == userId || role == "admin"){
+
+    User.findOne({ where: { id:userId}})
+    .then((user)=> res.json({
+        email: user.email,
+        username: user.username,
+        role: user.role
+        
+    }))
+    .catch(error =>res.status(400).json({ message: error.message}));
+
+} else {
+    return res.status(403).json({ message: 'action non autorisé!!'});
+}
+   
 
 }
