@@ -1,10 +1,9 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const path = require('path');
+const bodyParser = require('body-parser');
 const { sequelize } = require('./models');
 
-const app = express();
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
@@ -16,10 +15,12 @@ const connect = async function () {
       await sequelize.authenticate();
       console.log('La connexion a été établie avec succès à SQL.');
     } catch (error) {
-      console.error('Impossible de se connecter à la base de données SQL:', error);
+      console.error('Impossible de se connecter à la base de données SQL');
     }
   };
   connect();
+
+  const app = express(); 
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,9 +35,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/comments', commentRoutes);
-app.use('/posts', postRoutes);
-app.use('/users', userRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/auth', userRoutes);
 
 
 
