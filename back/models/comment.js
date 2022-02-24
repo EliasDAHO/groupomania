@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define('Comment', {
     content: DataTypes.STRING,
     Id: DataTypes.INTEGER,
-    
     postId: DataTypes.INTEGER
   }, {
     classMethods: {
